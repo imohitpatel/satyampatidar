@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Satyam Patidar | CAD Designer & Mechanical Engineer</title>
 
   <!-- Three.js Core & Addons -->
@@ -59,7 +59,7 @@
       pointer-events: none;
     }
 
-    /* ===== FIXED NAVIGATION (non-overlapping) ===== */
+    /* ===== FIXED NAVIGATION ===== */
     nav {
       position: fixed;
       top: 0;
@@ -97,9 +97,9 @@
     }
     .nav-links a:hover { color: #ff3c3c; }
 
-    /* Main content with top padding to avoid navbar overlap */
+    /* Main content – ensures scrollable area below fixed nav */
     main {
-      padding-top: 70px;
+      padding-top: 70px;  /* prevents navbar overlap */
     }
 
     /* Hero section */
@@ -107,7 +107,7 @@
       min-height: auto;
       display: flex;
       flex-direction: column;
-      padding: 30px 20px 50px;
+      padding: 20px 20px 50px;
       gap: 30px;
     }
     .hero-text { 
@@ -174,7 +174,7 @@
       overflow: hidden;
     }
 
-    /* Projects section */
+    /* Projects section – ensures scrollable content */
     .projects {
       padding: 50px 20px;
       text-align: center;
@@ -186,6 +186,7 @@
       grid-template-columns: 1fr;
       gap: 25px;
       margin-top: 35px;
+      margin-bottom: 20px;
     }
     .card {
       background: rgba(20, 20, 30, 0.6);
@@ -207,17 +208,31 @@
     .card h3 { font-size: 1.3rem; margin: 10px 0 5px; color: #ff8c5a; }
     .card p { color: #bbb; font-size: 0.75rem; }
 
-    /* About section */
+    /* About section – centered with max-width and highlighted year */
     .about-section {
       background: linear-gradient(145deg, #080808, #000000);
       padding: 50px 20px;
       text-align: center;
       border-top: 1px solid rgba(255,60,60,0.2);
+      border-bottom: 1px solid rgba(255,60,60,0.2);
+    }
+    .about-container {
+      max-width: 800px;
+      margin: 0 auto;
     }
     .about-section p {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      max-width: 100%;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .highlight-year {
+      color: #ffcc66;
+      font-weight: 700;
+      background: rgba(255,204,102,0.15);
+      padding: 2px 8px;
+      border-radius: 20px;
+      display: inline-block;
     }
 
     /* Talk section */
@@ -225,8 +240,6 @@
       background: radial-gradient(circle at 30% 10%, #0f0f1a, #020202);
       padding: 50px 20px;
       text-align: center;
-      border-top: 1px solid rgba(255,60,60,0.3);
-      border-bottom: 1px solid rgba(255,60,60,0.2);
     }
     .talk-badge {
       display: inline-block;
@@ -257,6 +270,9 @@
       font-size: 0.9rem;
       color: #ddd;
       margin-bottom: 25px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .talk-buttons {
       display: flex;
@@ -277,6 +293,7 @@
       border: 1px solid rgba(255,255,255,0.2);
       color: white;
       text-decoration: none;
+      cursor: pointer;
     }
     .btn-talk-primary { background: #ff3c3c; border: none; }
     .btn-talk-primary:active { background: #e62e2e; }
@@ -324,6 +341,7 @@
       font-weight: bold;
       width: 100%;
       margin-top: 10px;
+      cursor: pointer;
     }
     .close-modal {
       float: right;
@@ -368,6 +386,7 @@
       #heroViewer { flex: 1; height: 400px; }
       .grid { grid-template-columns: repeat(2, 1fr); }
       .viewer { height: 250px; }
+      .about-section p { font-size: 1rem; }
     }
     @media (min-width: 1024px) {
       .grid { grid-template-columns: repeat(3, 1fr); }
@@ -424,9 +443,12 @@
     <div class="grid" id="projectsGrid"></div>
   </section>
 
+  <!-- About Section with centered container and highlighted year -->
   <div class="about-section" id="contact">
-    <h2 class="section-title">About <span>Satyam</span></h2>
-    <p>I'm a 3D CAD specialist and inventive technologist, blending mechanical precision with creative CAD design. Currently pursuing B.Tech in Mechanical Engineering at Jabalpur Engineering College (2024–2028). With 5+ years of experience across multiple CAD platforms, I possess deep expertise in 2D and 3D workflows, including SketchUp, AutoCAD, and SolidWorks.</p>
+    <div class="about-container">
+      <h2 class="section-title">About <span>Satyam</span></h2>
+      <p>I'm a 3D CAD specialist and inventive technologist, blending mechanical precision with creative CAD design. Currently pursuing a Bachelor of Technology in Mechanical Engineering at Jabalpur Engineering College <span class="highlight-year">(2024–2028)</span>, I specialize in high-end, accurate 3D modeling and inventive mechanical design. With 5+ years of experience across multiple CAD platforms, I possess deep expertise in 2D and 3D workflows, including SketchUp, AutoCAD, and SolidWorks.</p>
+    </div>
   </div>
 
   <section class="talk-section">
@@ -509,10 +531,7 @@
   function initSTLViewer(containerId, stlPath, cardIndex) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    
-    // Clear any existing content
     container.innerHTML = '';
-    
     const width = container.clientWidth;
     const height = container.clientHeight;
     if (width < 10 || height < 10) return;
@@ -520,23 +539,20 @@
     const scene = new THREE.Scene();
     scene.background = null;
     scene.fog = new THREE.FogExp2(0x050505, 0.012);
-    
     const camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 1000);
     camera.position.set(0, 0.8, 3.2);
-    
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
     
-    // Loading hint
     const loaderHint = document.createElement('div');
     loaderHint.className = 'loading-indicator';
     loaderHint.textContent = '⏳ loading...';
     container.style.position = 'relative';
     container.appendChild(loaderHint);
     
-    // Lighting (vibrant)
+    // Lighting
     const ambient = new THREE.AmbientLight(0x222222, 0.7);
     scene.add(ambient);
     const mainLight = new THREE.DirectionalLight(0xffaa88, 1.3);
@@ -552,7 +568,6 @@
     backLight.position.set(0, 1, -2.8);
     scene.add(backLight);
     
-    // subtle grid
     const gridHelper = new THREE.GridHelper(8, 20, 0xff5555, 0x442222);
     gridHelper.position.y = -1.2;
     gridHelper.material.transparent = true;
@@ -580,7 +595,6 @@
       });
       const mesh = new THREE.Mesh(geometry, material);
       scene.add(mesh);
-      // add wireframe edge overlay for tech look
       const edgesGeo = new THREE.EdgesGeometry(geometry);
       const edgesMat = new THREE.LineBasicMaterial({ color: 0xff8888, transparent: true, opacity: 0.3 });
       const wireframe = new THREE.LineSegments(edgesGeo, edgesMat);
@@ -588,7 +602,6 @@
     }, undefined, (error) => {
       console.error(`STL missing: ${stlPath}`, error);
       if (loaderHint) loaderHint.remove();
-      // fallback colored cube
       const fallbackGeo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
       const fallbackMat = new THREE.MeshStandardMaterial({ color: 0xff6666, emissive: 0x441111 });
       const cube = new THREE.Mesh(fallbackGeo, fallbackMat);
@@ -614,7 +627,6 @@
     }
     animate();
     
-    // resize observer for container
     const resizeObs = new ResizeObserver(() => {
       const newW = container.clientWidth;
       const newH = container.clientHeight;
@@ -627,7 +639,7 @@
     resizeObs.observe(container);
   }
 
-  // ========== HERO VIEWER (abstract sculpture) ==========
+  // ========== HERO VIEWER ==========
   function initHeroViewer() {
     const container = document.getElementById('heroViewer');
     if (!container) return;
@@ -720,16 +732,14 @@
     resizeObs.observe(container);
   }
 
-  // ========== GENERATE 9 PROJECT CARDS ==========
+  // Generate 9 project cards
   const gridContainer = document.getElementById('projectsGrid');
-  const totalProjects = 9; // model.STL + model1.STL ... model8.STL
+  const totalProjects = 9;
   for (let i = 1; i <= totalProjects; i++) {
     const card = document.createElement('div');
     card.className = 'card';
     const viewerId = `viewer_${i}`;
-    let stlFile;
-    if (i === 1) stlFile = 'model.STL';
-    else stlFile = `model${i-1}.STL`;
+    let stlFile = (i === 1) ? 'model.STL' : `model${i-1}.STL`;
     card.innerHTML = `
       <div class="viewer" id="${viewerId}"></div>
       <h3>CAD Model ${i}</h3>
@@ -737,45 +747,34 @@
     `;
     gridContainer.appendChild(card);
     card.dataset.stl = stlFile;
-    card.dataset.viewerId = viewerId;
   }
 
-  // Initialize viewers after DOM ready
+  // Initialize all viewers
   setTimeout(() => {
     initHeroViewer();
     for (let i = 1; i <= totalProjects; i++) {
       const viewerId = `viewer_${i}`;
       const card = document.querySelector(`#${viewerId}`)?.closest('.card');
       const stlFile = card ? card.dataset.stl : (i === 1 ? 'model.STL' : `model${i-1}.STL`);
-      // delay a bit to ensure container size
-      setTimeout(() => {
-        initSTLViewer(viewerId, stlFile, i);
-      }, 50);
+      setTimeout(() => initSTLViewer(viewerId, stlFile, i), 50);
     }
   }, 200);
 
-  // ========== MODAL LOGIC ==========
+  // Modal logic
   const modal = document.getElementById('bookingModal');
   const bookBtn = document.getElementById('bookCallBtn');
   const closeSpan = document.querySelector('.close-modal');
   const submitBtn = document.getElementById('submitBooking');
-  
-  if (bookBtn) {
-    bookBtn.onclick = () => { modal.style.display = 'flex'; };
-  }
+  if (bookBtn) bookBtn.onclick = () => { modal.style.display = 'flex'; };
   if (closeSpan) closeSpan.onclick = () => { modal.style.display = 'none'; };
   window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-  
   if (submitBtn) {
     submitBtn.onclick = () => {
       const name = document.getElementById('guestName')?.value.trim();
       const email = document.getElementById('guestEmail')?.value.trim();
       const time = document.getElementById('preferredTime')?.value;
       const msg = document.getElementById('message')?.value.trim();
-      if (!name || !email) {
-        alert("Please provide name and email.");
-        return;
-      }
+      if (!name || !email) { alert("Please provide name and email."); return; }
       const timeStr = time ? new Date(time).toLocaleString() : "Not specified";
       const subject = `Meeting Request from ${name}`;
       const body = `Name: ${name}\nEmail: ${email}\nTime: ${timeStr}\nMessage: ${msg || "None"}`;
